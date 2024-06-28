@@ -26,21 +26,17 @@ export default function Register({ navigation }) {
       <View style={styles.main}>
         <View style={styles.mainInput}>
           <Text>Name</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setUsername}
-            value={name}
-          />
+          <TextInput style={styles.input} onChangeText={setName} value={name} />
           <Text>Email</Text>
           <TextInput
             style={styles.input}
-            onChangeText={setUsername}
+            onChangeText={setEmail}
             value={email}
           />
           <Text>Phone Number</Text>
           <TextInput
             style={styles.input}
-            onChangeText={setUsername}
+            onChangeText={setPhone}
             value={phone}
           />
           <Text>Username</Text>
