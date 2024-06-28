@@ -15,6 +15,7 @@ import {
   StatusBar as RNStatusBar,
   ToastAndroid,
 } from "react-native";
+import ShiftCard from "./ShiftCard";
 
 export default function Home({ navigation }) {
   const [clockInTime, setClockInTime] = useState(null);
@@ -55,7 +56,7 @@ export default function Home({ navigation }) {
         setBreakStart(now);
         ToastAndroid.show(
           "Break started at" + now.toLocaleTimeString(),
-          ToastAndroid.LONG
+          ToastAndroid.LONG,
         );
       },
     },
@@ -70,16 +71,19 @@ export default function Home({ navigation }) {
         setBreakEnd(now);
         ToastAndroid.show(
           "Break ended at" + now.toLocaleTimeString(),
-          ToastAndroid.LONG
+          ToastAndroid.LONG,
         );
       },
     },
   ];
 
-
   return (
     <>
-      <RNStatusBar hidden={modalVisible} barStyle="dark-content" backgroundColor="white" />
+      <RNStatusBar
+        hidden={modalVisible}
+        barStyle="dark-content"
+        backgroundColor="white"
+      />
       <View style={{ flex: 1, backgroundColor: "white" }}>
         <SafeAreaView style={styles.container}>
           {/* Logo */}
@@ -89,7 +93,6 @@ export default function Home({ navigation }) {
               source={require("./assets/Asset 1.png")}
             />
           </View>
-
           <View style={styles.cardsContainers}>
             {/* Clock in and out buttons */}
             <View style={styles.clockInOutContainer}>
@@ -108,33 +111,33 @@ export default function Home({ navigation }) {
               </TouchableOpacity>
             </View>
             {/* Break buttons */}
-            <View style={styles.breakContainer}>
-              <TouchableOpacity
-                style={styles.greenButton}
-                onPress={() => {
-                  Alert.alert(
-                    "Attention",
-                    "Do you want to start your break?",
-                    buttons1Config
-                  );
-                }}
-              >
-                <Text style={styles.buttonText}>Start Break</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.redButton}
-                onPress={() => {
-                  Alert.alert(
-                    "Attention",
-                    "Do you want to end your break?",
-                    buttons2Config
-                  );
-                }}
-              >
-                <Text style={styles.buttonText}>End Break</Text>
-              </TouchableOpacity>
-            </View>
+            {/* <View style={styles.breakContainer}> */}
+            {/*   <TouchableOpacity */}
+            {/*     style={styles.greenButton} */}
+            {/*     onPress={() => { */}
+            {/*       Alert.alert( */}
+            {/*         "Attention", */}
+            {/*         "Do you want to start your break?", */}
+            {/*         buttons1Config, */}
+            {/*       ); */}
+            {/*     }} */}
+            {/*   > */}
+            {/*     <Text style={styles.buttonText}>Start Break</Text> */}
+            {/*   </TouchableOpacity> */}
+            {/**/}
+            {/*   <TouchableOpacity */}
+            {/*     style={styles.redButton} */}
+            {/*     onPress={() => { */}
+            {/*       Alert.alert( */}
+            {/*         "Attention", */}
+            {/*         "Do you want to end your break?", */}
+            {/*         buttons2Config, */}
+            {/*       ); */}
+            {/*     }} */}
+            {/*   > */}
+            {/*     <Text style={styles.buttonText}>End Break</Text> */}
+            {/*   </TouchableOpacity> */}
+            {/* </View> */}
           </View>
           {/* Pop up */}
           <Modal
@@ -165,53 +168,13 @@ export default function Home({ navigation }) {
                   style={styles.modalButton}
                   onPress={handleModalClose}
                 >
-                  <Text style={{color:"white"}}>Dismiss</Text>
+                  <Text style={{ color: "white" }}>Dismiss</Text>
                 </TouchableHighlight>
               </View>
             </View>
           </Modal>
-
           {/* Previous shifts display */}
-          <View style={styles.cardsContainers}>
-          <View style={styles.arrowContainer}>
-            <Image
-              style={styles.myarrow}
-              source={require("./assets/rightarrow.png")}
-            />
-            </View>
-            <Text style={styles.clockInOutContainerText}>
-              YOUR PREVIOUS SHIFTS AT A GLANCE
-            </Text>
-            <FlatList
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              data={shifts}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item, index }) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.jobBox}
-                  onPress={() =>
-                    navigation.navigate("Shifts", {
-                      clockIn: item.clockIn,
-                      clockOut: item.clockOut,
-                    })
-                  }
-                >
-                  <Text style={styles.jobTitle}>
-                    {item.clockIn?.toDateString()}{" "}
-                  </Text>
-                  <Text style={styles.jobDetails}>
-                    Clock in time: {item.clockIn?.toLocaleTimeString()}{" "}
-                  </Text>
-                  <Text style={styles.jobDetails}>
-                    Clock out time: {item.clockOut?.toLocaleTimeString()}{" "}
-                  </Text>
-                </TouchableOpacity>
-              )}
-             
-            />
-          </View>
+          <ShiftCard shifts={shifts} />
         </SafeAreaView>
       </View>
     </>
@@ -297,37 +260,6 @@ const styles = StyleSheet.create({
     width: 105,
     height: 50,
   },
-  jobBox: {
-    marginTop: 15,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 15,
-    height: 150,
-    marginHorizontal: 5,
-    width: 150,
-    borderWidth: 0.5,
-    borderColor: "#ebebeb",
-    alignItems: "center",
-    shadowColor: "black",
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 2, height: 2 },
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  jobTitle: {
-    fontWeight: "bold",
-    padding: 5,
-    // color:'white'
-  },
-  jobDetails: {
-    fontStyle: "italic",
-    // color:'white'
-  },
-  clockInOutContainerText: {
-    // padding: 20,
-    marginTop: 20,
-    fontWeight: "600",
-  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -361,17 +293,5 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginLeft: 10,
     marginRight: 10,
-  },
-  arrowContainer: {
-    position: 'absolute',
-    top: '50%',
-    right: 0,
-    transform: [{ translateY: -12.5 }], 
-    zIndex: 1,
-  },  
-  myarrow: {
-    height: 20,
-    width: 20,
-    resizeMode: "contain",
   },
 });
